@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureAuth — Security Command Center</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <div class="page-wrapper">
+    <div class="dashboard-layout">
+
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div>
+          <p class="welcome-text">Security Command Center</p>
+          <h1 class="welcome-name">Hello, <span>{{ user.username }}</span> 👋</h1>
+          <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">
+            Last login: {{ last_login }}
+            &nbsp;·&nbsp;
+            {% if c_engine_active %}
+            <span class="c-engine-badge">⚡ C Engine Active</span>
+            {% else %}
+            <span class="c-engine-badge inactive">Python Fallback</span>
+            {% endif %}
+          </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div class="status-badge {% if system_status == 'SECURE' %}secure{% else %}warning{% endif %}">
+            <span class="status-pulse"></span>
+            {{ system_status }}
+          </div>
+          <a href="/logout" class="btn-danger" id="logoutBtn">🔒 Secure Logout</a>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+
+        <!-- Username -->
+        <div class="glass-card stat-card" style="--card-accent:linear-gradient(90deg,#00d4ff,#7b2ff7);">
+          <span class="stat-icon">👤</span>
+          <p class="stat-label">Account</p>
+          <p class="stat-value">{{ user.username }}</p>
+          <p class="stat-sub">Authenticated user</p>
+        </div>
+
+        <!-- Role -->
+        <div class="glass-card stat-card" style="--card-accent:linear-gradient(90deg,{{ role_color }},#7b2ff7);">
+          <span class="stat-icon">🎖️</span>
+          <p class="stat-label">Access Level</p>
+          <p class="stat-value" style="color:{{ role_color }};font-size:18px;">{{ role_display }}</p>
+          <p class="stat-sub">{{ access_level | replace('_',' ') | title }}</p>
+        </div>
+
+        <!-- OS User -->
+        <div class="glass-card stat-card" style="--card-accent:linear-gradient(90deg,#ff6b35,#ff4757);">
+          <span class="stat-icon">💻</span>
+          <p class="stat-label">System User</p>
+          <p class="stat-value" style="font-size:18px;">{{ os_user }}</p>
+          <p class="stat-sub">Host OS account</p>
+        </div>
+
+        <!-- Security Score -->
+        <div class="glass-card stat-card" style="--card-accent:linear-gradient(90deg,#00ff88,#00d4ff);">
+          <p class="stat-label">Security Score</p>
+          <div class="score-ring-wrapper">
+            <div class="score-ring">
+              <svg viewBox="0 0 60 60" width="64" height="64">
+                <circle class="score-ring-bg" cx="30" cy="30" r="26"/>
+                <circle class="score-ring-fill" cx="30" cy="30" r="26"
+                  data-score="{{ user.security_score or 0 }}"/>
+              </svg>
+              <div class="score-number">{{ user.security_score or 0 }}</div>
+            </div>
+            <div>
+              <p class="stat-value" style="font-size:16px;">
+                {% if (user.security_score or 0) >= 80 %}Excellent
+                {% elif (user.security_score or 0) >= 60 %}Good
+                {% elif (user.security_score or 0) >= 40 %}Fair
+                {% else %}Low{% endif %}
+              </p>
+              <p class="stat-sub">Out of 100 points</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Logs Panel -->
+      <div class="glass-card logs-panel" id="liveLogsPanel">
+        <div class="logs-header">
+          <span class="logs-title">🛡️ Security Event Log</span>
+          <span class="live-indicator"><span class="live-dot"></span>Live</span>
+        </div>
+
+        <div class="log-list">
+          {% if recent_logs %}
+            {% for log in recent_logs %}
+            <div class="log-entry">
+              <span class="log-severity {% if log.severity in ['CRITICAL'] or 'ATTACK' in log.event_type or 'LOCKED' in log.event_type %}attack{% elif log.severity == 'WARNING' %}warning{% else %}info{% endif %}">
+                {{ log.severity or 'INFO' }}
+              </span>
+              <span class="log-message">{{ log.message }}</span>
+              <span class="log-time">{{ log.timestamp }}</span>
+            </div>
+            {% endfor %}
+          {% else %}
+            <p class="no-logs">✅ No security events recorded yet. System clean.</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script>
+    // Show welcome toast
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => toast('Welcome back, {{ user.username }}! Session active.', 'success'), 600);
+      {% if system_status == 'WARNING' %}
+      setTimeout(() => toast('⚠️ Security warnings detected in recent logs.', 'warning'), 1400);
+      {% endif %}
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureAuth — Verify OTP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p class="loading-text">Verifying OTP…</p>
+  </div>
+
+  <div class="page-wrapper" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;">
+    <div class="glass-card auth-card" style="max-width:480px;">
+
+      <div class="logo-mark">
+        <div class="logo-icon">🛡️</div>
+        <span class="logo-text">SecureAuth</span>
+      </div>
+
+      <h2 class="card-title">Two-Factor Verification</h2>
+      <p class="card-sub">Enter the 6-digit code from your authenticator app. The code refreshes every 30 seconds.</p>
+
+      {% if error %}
+      <div class="alert alert-error">
+        <span class="alert-icon">⚠️</span>
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/verify-otp" class="otp-form" id="otpForm">
+        <!-- Hidden field that JS populates -->
+        <input type="hidden" name="otp_code" id="otp_code">
+
+        <div class="otp-container">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="OTP digit 1">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="OTP digit 2">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="OTP digit 3">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="OTP digit 4">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="OTP digit 5">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="OTP digit 6">
+        </div>
+
+        <button type="submit" class="btn-primary">Verify &amp; Access Dashboard</button>
+      </form>
+
+      <div class="form-link" style="margin-top:16px;">
+        <a href="/" style="color:var(--text-muted);font-size:13px;">← Back to login</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

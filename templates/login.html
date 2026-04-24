@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureAuth — Sign In</title>
+  <meta name="description" content="SecureAuth multi-layer security platform — sign in to your account">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p class="loading-text">Authenticating…</p>
+  </div>
+
+  <div class="page-wrapper">
+    <div class="split-layout">
+
+      <!-- LEFT: Branding Panel -->
+      <div class="split-left">
+        <div class="logo-mark">
+          <div class="logo-icon">🔐</div>
+          <span class="logo-text">SecureAuth</span>
+        </div>
+        <h1 class="brand-headline">
+          Enterprise<br><span class="accent">Security</span><br>Redefined.
+        </h1>
+        <p class="brand-sub">
+          A multi-layer authentication engine powered by Python + C.
+          Real-time threat detection. Cinematic interface.
+        </p>
+        <div class="brand-features">
+          <div class="brand-feature"><div class="feature-dot"></div> C-powered attack pattern detection</div>
+          <div class="brand-feature"><div class="feature-dot" style="background:#7b2ff7;box-shadow:0 0 20px rgba(123,47,247,0.4)"></div> Brute-force lockout engine</div>
+          <div class="brand-feature"><div class="feature-dot" style="background:#00ff88;box-shadow:0 0 20px rgba(0,255,136,0.3)"></div> TOTP multi-factor authentication</div>
+          <div class="brand-feature"><div class="feature-dot" style="background:#ff6b35;box-shadow:0 0 20px rgba(255,107,53,0.3)"></div> Live security score &amp; logging</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Login Card -->
+      <div class="split-right">
+        <div class="glass-card auth-card">
+          <div class="logo-mark">
+            <div class="logo-icon">🔐</div>
+            <span class="logo-text">SecureAuth</span>
+          </div>
+
+          <h2 class="card-title">Welcome back</h2>
+          <p class="card-sub">Sign in to your secure account</p>
+
+          {% if error %}
+          <div class="alert {% if attack_warning %}alert-warning{% else %}alert-error{% endif %}">
+            <span class="alert-icon">{% if attack_warning %}⚡{% else %}⚠️{% endif %}</span>
+            {{ error }}
+          </div>
+          {% endif %}
+
+          {% if locked %}
+          <div class="alert alert-warning">
+            <span class="alert-icon">🔒</span>
+            Account temporarily locked. Please wait before retrying.
+          </div>
+          {% endif %}
+
+          <form method="POST" action="/" class="auth-form" id="loginForm">
+            <div class="input-group">
+              <input type="text" id="username" name="username" placeholder="Username"
+                     autocomplete="username" required
+                     value="{{ request.form.get('username', '') }}">
+              <label for="username">Username</label>
+              <span class="input-icon">👤</span>
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="password" name="password" placeholder="Password"
+                     autocomplete="current-password" required>
+              <label for="password">Password</label>
+              <span class="input-icon">🔑</span>
+            </div>
+
+            <button type="submit" class="btn-primary" id="loginBtn">
+              Sign In Securely
+            </button>
+          </form>
+
+          <div class="divider"><span class="divider-text">OR</span></div>
+
+          <div class="form-link">
+            New here? <a href="/register">Create an account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

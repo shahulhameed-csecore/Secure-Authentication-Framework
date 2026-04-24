@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup 2-Step Verification</title>
+</head>
+<body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+    <h2>Secure Your Account</h2>
+    <p>Scan this QR code with the <strong>Google Authenticator</strong> or <strong>Authy</strong> app on your phone.</p>
+    
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ qr_uri|urlencode }}" alt="QR Code" style="border: 2px solid #ccc; border-radius: 10px; padding: 10px;">
+    
+    <p style="color: #666; margin-top: 20px;">Or enter this secret key manually: <strong>{{ secret }}</strong></p>
+
+    <br><br>
+    <a href="{{ url_for('login') }}" style="padding: 10px 20px; background-color: #0b1f38; color: white; text-decoration: none; border-radius: 5px;">I have scanned it, go to Login</a>
+</body>
+</html>

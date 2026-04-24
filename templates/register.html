@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureAuth — Create Account</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p class="loading-text">Creating account…</p>
+  </div>
+
+  <div class="page-wrapper">
+    <div class="split-layout">
+
+      <!-- LEFT -->
+      <div class="split-left">
+        <div class="logo-mark">
+          <div class="logo-icon">🔐</div>
+          <span class="logo-text">SecureAuth</span>
+        </div>
+        <h1 class="brand-headline">
+          Join the<br><span class="accent">Secure</span><br>Network.
+        </h1>
+        <p class="brand-sub">
+          Get bcrypt-hashed credentials, TOTP two-factor authentication, and a real-time security score — from day one.
+        </p>
+        <div class="brand-features">
+          <div class="brand-feature"><div class="feature-dot"></div> bcrypt password hashing</div>
+          <div class="brand-feature"><div class="feature-dot" style="background:#7b2ff7;box-shadow:0 0 20px rgba(123,47,247,0.4)"></div> TOTP authenticator setup</div>
+          <div class="brand-feature"><div class="feature-dot" style="background:#00ff88;box-shadow:0 0 20px rgba(0,255,136,0.3)"></div> Instant security scoring</div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="split-right">
+        <div class="glass-card auth-card">
+          <div class="logo-mark">
+            <div class="logo-icon">✨</div>
+            <span class="logo-text">Create Account</span>
+          </div>
+
+          <h2 class="card-title">Get started</h2>
+          <p class="card-sub">Your account will be secured with TOTP 2FA</p>
+
+          {% if error %}
+          <div class="alert alert-error">
+            <span class="alert-icon">⚠️</span>
+            {{ error }}
+          </div>
+          {% endif %}
+
+          <form method="POST" action="/register" class="auth-form" id="registerForm">
+
+            <div class="input-group">
+              <input type="text" id="username" name="username" placeholder="Username"
+                     autocomplete="username" required minlength="3" maxlength="32"
+                     value="{{ request.form.get('username', '') }}">
+              <label for="username">Username</label>
+              <span class="input-icon">👤</span>
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="password" name="password" placeholder="Password"
+                     autocomplete="new-password" required>
+              <label for="password">Password</label>
+              <span class="input-icon">🔑</span>
+            </div>
+
+            <!-- Password strength bar -->
+            <div style="margin:-12px 0 16px;padding:0 2px;">
+              <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;">
+                <div id="strengthBar" style="height:100%;width:0;border-radius:2px;transition:all 0.3s ease;"></div>
+              </div>
+              <p id="strengthLabel" style="font-size:11px;margin-top:4px;color:var(--text-muted);text-align:right;"></p>
+            </div>
+
+            <div class="input-group">
+              <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password"
+                     autocomplete="new-password" required>
+              <label for="confirm_password">Confirm Password</label>
+              <span class="input-icon">✅</span>
+            </div>
+
+            <button type="submit" class="btn-primary">Create Secure Account</button>
+          </form>
+
+          <div class="divider"><span class="divider-text">OR</span></div>
+          <div class="form-link">Already have an account? <a href="/">Sign in</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
