@@ -1,0 +1,10 @@
+# Python virtual environment
+venv/
+__pycache__/
+
+# Hidden secrets and database
+.env
+secure_auth.db
+
+# Do not upload actual photos of people!
+static/audit_logs/*.jpg
